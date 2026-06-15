@@ -1,0 +1,7 @@
+Path Traversal
+
+Description: Use of user-controlled file paths without proper sanitization, allowing access to files outside intended directories (e.g., use of ".." segments).
+
+Check for:
+- Direct concatenation of user input into file paths
+- File reads/writes without canonicalization or sandboxing
