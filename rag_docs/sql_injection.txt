@@ -1,7 +1,0 @@
-SQL Injection
-
-Description: Injection of SQL via unsanitized input. Look for concatenated SQL strings, use of `Statement` with user input, or missing parameterized queries.
-
-Examples:
-- "SELECT * FROM users WHERE id = " + userId
-- No use of prepared statements
