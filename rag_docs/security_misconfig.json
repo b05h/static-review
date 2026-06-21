@@ -1,0 +1,47 @@
+{
+    "CWE-942": {
+        "name": "Overly Permissive Cross-Origin Resource Sharing (CORS) Policy",
+        "owasp_category": "A02:2025-Security Misconfiguration",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application's middleware is configured to accept cross-origin requests from any domain (e.g., setting `Access-Control-Allow-Origin: *` or dynamically reflecting the requester's Origin header) while also allowing credentials. This misconfiguration allows malicious websites to execute authenticated API requests on behalf of the victim via their browser.",
+        "mitigation_name": "OWASP ASVS V14.4.7: CORS Configuration",
+        "mitigation_description": "Configure CORS middleware to use a strict, hardcoded allow-list of trusted domains. Never use the wildcard '*' combined with `Access-Control-Allow-Credentials: true`, and never dynamically reflect the incoming Origin header without validating it against the allow-list.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x22-V14-Config.md"
+    },
+    "CWE-209": {
+        "name": "Generation of Error Message Containing Sensitive Information",
+        "owasp_category": "A02:2025-Security Misconfiguration",
+        "mitre_technique": "T1005",
+        "problem_explanation": "The application or framework is configured in a 'debug' or 'development' mode in a production environment. When an exception occurs, it returns raw stack traces, database schema details, or internal framework variables to the client, providing attackers with a blueprint of the backend architecture.",
+        "mitigation_name": "OWASP ASVS V7.4.1: Safe Error Handling",
+        "mitigation_description": "Ensure production environments explicitly disable debug modes. Implement a global exception handler that catches all unhandled errors, logs the verbose details securely on the backend, and returns only a generic, safe error message to the user.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x15-V7-Error-Logging.md"
+    },
+    "CWE-693": {
+        "name": "Protection Mechanism Failure (Missing HTTP Security Headers)",
+        "owasp_category": "A02:2025-Security Misconfiguration",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application's routing or response middleware fails to inject defense-in-depth HTTP security headers. Without headers like Strict-Transport-Security (HSTS), Content-Security-Policy (CSP), or X-Frame-Options, the application relies entirely on perfect code execution, leaving the client vulnerable to clickjacking, downgrade attacks, and XSS.",
+        "mitigation_name": "OWASP ASVS V14.4: HTTP Security Headers",
+        "mitigation_description": "Implement global response middleware to explicitly set modern security headers on all outgoing HTTP responses. Enforce HSTS for forced TLS routing, frame-ancestors to prevent clickjacking, and a strict CSP to limit resource loading.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x22-V14-Config.md"
+    },
+    "CWE-548": {
+        "name": "Exposure of Information Through Directory Listing",
+        "owasp_category": "A02:2025-Security Misconfiguration",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The underlying web server (like Apache, Nginx, or IIS) or cloud storage bucket is misconfigured to allow directory browsing. If a user navigates to a directory without a default index file, the server automatically generates a list of all files in that directory, potentially exposing source code, configuration files, or database backups.",
+        "mitigation_name": "OWASP ASVS V14.3.2: Web Server Configuration",
+        "mitigation_description": "Disable directory browsing globally in the web server or cloud bucket configuration. Ensure that application routing mechanisms only serve files explicitly defined by application logic rather than mapping directly to the underlying file system.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x22-V14-Config.md"
+    },
+    "CWE-16": {
+        "name": "Configuration Environment Exposure",
+        "owasp_category": "A02:2025-Security Misconfiguration",
+        "mitre_technique": "T1552",
+        "problem_explanation": "The source code includes files like `.env`, `.git`, or framework-specific config files (like `wp-config.php.bak`) that are accidentally deployed to the web root. Because the server is not configured to explicitly deny access to dotfiles or backup extensions, attackers can download them directly to extract master credentials and API keys.",
+        "mitigation_name": "OWASP ASVS V14.2.1: Secure Deployment Architecture",
+        "mitigation_description": "Ensure that configuration files, version control directories, and environment variable definitions are stored completely outside of the public web root. Configure the web server to explicitly reject all HTTP requests targeting hidden files or unrecognized file extensions.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x22-V14-Config.md"
+    }
+}

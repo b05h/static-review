@@ -1,0 +1,38 @@
+{
+    "CWE-841": {
+        "name": "Improper Enforcement of Behavioral Workflow (Business Logic Bypass)",
+        "owasp_category": "A06:2025-Insecure Design",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application assumes users will interact with multi-step processes (like an e-commerce checkout or an approval pipeline) in a specific order. However, the backend code fails to enforce the current state. An attacker can manipulate API endpoints to skip crucial steps, such as forcefully navigating to `/checkout/complete` without ever passing through `/checkout/payment`.",
+        "mitigation_name": "OWASP ASVS V11.1.1: Business Logic Architecture",
+        "mitigation_description": "Maintain the state of multi-step transactions securely on the server side. Explicitly validate that all prerequisites and previous steps have been successfully completed and cryptographically verified before allowing the user to execute the final state-changing action.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x19-V11-BusLogic.md"
+    },
+    "CWE-799": {
+        "name": "Improper Control of Interaction Frequency (Missing Rate Limiting)",
+        "owasp_category": "A06:2025-Insecure Design",
+        "mitre_technique": "T1499.004",
+        "problem_explanation": "The application exposes high-value or resource-intensive API endpoints (such as password resets, SMS OTP generation, or large data exports) without implementing rate limiting or throttling. In static code, this appears as sensitive controllers missing `@RateLimit` annotations or throttling middleware, allowing an attacker to launch brute-force attacks, SMS toll fraud, or application-layer Denial of Service (DoS).",
+        "mitigation_name": "OWASP ASVS V11.1.4: Rate Limiting and Anti-Automation",
+        "mitigation_description": "Implement robust rate-limiting middleware on all state-changing or sensitive API endpoints. Enforce limits based on IP address, user session, and account ID to detect and block abnormal spikes in request frequency.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x19-V11-BusLogic.md"
+    },
+    "CWE-362": {
+        "name": "Concurrent Execution using Shared Resource with Improper Synchronization (Race Condition)",
+        "owasp_category": "A06:2025-Insecure Design",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application processes state-changing requests concurrently without employing proper thread locks or database transactional isolation. If an attacker sends multiple identical requests simultaneously (e.g., redeeming a $50 gift card five times in one millisecond), the 'check' phase succeeds for all of them before the 'update' phase executes, allowing the attacker to drain funds or duplicate actions.",
+        "mitigation_name": "OWASP ASVS V11.1.3: Concurrency and Race Condition Protections",
+        "mitigation_description": "Enforce strict database concurrency controls, such as pessimistic locking (`SELECT ... FOR UPDATE`), optimistic locking (version numbers), or strong transaction isolation levels (Serializable). Ensure critical business logic executes as a single, atomic operation.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x19-V11-BusLogic.md"
+    },
+    "CWE-837": {
+        "name": "Improper Enforcement of a Single, Unique Action (Lack of Idempotency)",
+        "owasp_category": "A06:2025-Insecure Design",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application allows users to submit the same critical action (like a financial transfer, a vote, or a refund) multiple times because the backend does not uniquely identify the transaction intent. If the client retries a request due to a network timeout, or an attacker intentionally replays the request, the action is executed repeatedly.",
+        "mitigation_name": "OWASP ASVS V11.1.2: Idempotency",
+        "mitigation_description": "Require clients to generate and submit a unique 'Idempotency-Key' header with every critical state-changing request. The server must validate this key against a cache or database to ensure that duplicate requests are safely ignored and only the initial request is processed.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x19-V11-BusLogic.md"
+    }
+}

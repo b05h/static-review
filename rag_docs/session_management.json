@@ -1,0 +1,47 @@
+{
+    "CWE-384": {
+        "name": "Session Fixation",
+        "owasp_category": "A07:2025-Authentication Failures",
+        "mitre_technique": "T1539",
+        "problem_explanation": "The application authenticates a user without invalidating their existing pre-authentication session ID and issuing a new one. In static code, this appears as a missing call to session regeneration functions (like `session.invalidate()` followed by `request.getSession(true)` in Java, or `session_regenerate_id()` in PHP) immediately after a successful login step. This allows an attacker to pre-set a victim's session ID and hijack their account once they log in.",
+        "mitigation_name": "OWASP ASVS V3.2.1: Session Regeneration",
+        "mitigation_description": "Generate a new session identifier and invalidate the old one upon any change in privilege level, especially during the transition from an anonymous user to an authenticated user.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x11-V3-Session-management.md"
+    },
+    "CWE-614": {
+        "name": "Sensitive Cookie in HTTPS Session Without 'Secure' Attribute",
+        "owasp_category": "A02:2025-Security Misconfiguration",
+        "mitre_technique": "T1539",
+        "problem_explanation": "The source code instructs the application to issue a session cookie without explicitly setting the 'Secure' flag to true. This allows the browser to transmit the sensitive session cookie over unencrypted (HTTP) connections if the user accidentally navigates to an insecure link, allowing network attackers to intercept the token.",
+        "mitigation_name": "OWASP ASVS V3.4.1: Secure Cookie Attributes",
+        "mitigation_description": "Ensure that the 'Secure' attribute is explicitly set on all session cookies and any cookies containing sensitive data, enforcing that they are only transmitted over TLS-encrypted connections.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x11-V3-Session-management.md"
+    },
+    "CWE-1004": {
+        "name": "Sensitive Cookie Without 'HttpOnly' Flag",
+        "owasp_category": "A02:2025-Security Misconfiguration",
+        "mitre_technique": "T1539",
+        "problem_explanation": "The source code configures session cookies but fails to set the 'HttpOnly' flag. This leaves the cookie accessible to client-side scripts (such as JavaScript via `document.cookie`). If the application is vulnerable to Cross-Site Scripting (XSS), the attacker's injected script can instantly extract the session token and hijack the account.",
+        "mitigation_name": "OWASP ASVS V3.4.2: HttpOnly Cookie Attributes",
+        "mitigation_description": "Set the 'HttpOnly' attribute on all session identifiers and sensitive cookies. This instructs the browser to forbid client-side scripts from accessing the cookie, severely limiting the impact of XSS attacks.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x11-V3-Session-management.md"
+    },
+    "CWE-613": {
+        "name": "Insufficient Session Expiration",
+        "owasp_category": "A07:2025-Authentication Failures",
+        "mitre_technique": "T1539",
+        "problem_explanation": "The application code sets session timeout limits to extremely high values, or fails to define an absolute and idle timeout mechanism entirely. In static code, this looks like missing configurations for max inactive intervals. A session that lives indefinitely allows an attacker to compromise an abandoned terminal or extract an old token from a victim's machine long after the user thought they were logged out.",
+        "mitigation_name": "OWASP ASVS V3.3.1: Session Timeouts",
+        "mitigation_description": "Implement both absolute session timeouts (e.g., 12 hours) and idle timeouts (e.g., 15 minutes of inactivity). Ensure these limits are enforced strictly on the server-side, forcing the user to re-authenticate once the threshold is reached.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x11-V3-Session-management.md"
+    },
+    "CWE-598": {
+        "name": "Use of GET Request Method With Sensitive Query Strings",
+        "owasp_category": "A07:2025-Authentication Failures",
+        "mitre_technique": "T1552",
+        "problem_explanation": "The application code handles authentication or session management by appending session tokens, API keys, or passwords directly into the URL query string (e.g., `/dashboard?session_id=12345`). URLs are logged by intermediate proxies, corporate firewalls, server access logs, and the user's browser history, exposing the active session token to anyone with log access.",
+        "mitigation_name": "OWASP ASVS V3.1.1: Secure Session Tracking",
+        "mitigation_description": "Never transmit session identifiers, tokens, or credentials in URL query parameters. Always transmit them securely via HTTP headers (like the `Authorization` header) or within strictly configured session cookies.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x11-V3-Session-management.md"
+    }
+}

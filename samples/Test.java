@@ -1,13 +1,8 @@
-import java.sql.Connection;
-import java.sql.Statement;
-
 public class Test {
-    public void login(Connection conn, String username) throws Exception {
-        Statement stmt = conn.createStatement();
+    public static void main(String[] args) throws Exception {
 
-        String query =
-            "SELECT * FROM users WHERE name='" + username + "'";
+        String userInput = args[0];
 
-        stmt.executeQuery(query);
+        Runtime.getRuntime().exec(userInput);
     }
 }

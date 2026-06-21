@@ -1,0 +1,56 @@
+{
+    "CWE-327": {
+        "name": "Use of a Broken or Risky Cryptographic Algorithm",
+        "owasp_category": "A02:2021-Cryptographic Failures",
+        "mitre_technique": "T1573",
+        "problem_explanation": "The application uses old, broken, or deprecated cryptographic algorithms (such as MD5, SHA-1, RC4, or DES) to protect sensitive data or verify integrity. Attackers can exploit known mathematical flaws in these algorithms to compute collisions, decrypt ciphertexts, or forge signatures without knowing the secret key.",
+        "mitigation_name": "OWASP ASVS V6.2.1: Robust Cryptographic Algorithms",
+        "mitigation_description": "Verify that all cryptographic functions use industry-approved, modern algorithms that are resistant to attack. Use SHA-256 or SHA-3 for hashing, AES (GCM or CBC mode with proper padding) for symmetric encryption, and RSA (at least 3072-bit) or ECC for asymmetric operations.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x14-V6-Cryptography.md"
+    },
+    "CWE-326": {
+        "name": "Inadequate Encryption Strength",
+        "owasp_category": "A02:2021-Cryptographic Failures",
+        "mitre_technique": "T1573",
+        "problem_explanation": "The application relies on trusted cryptographic algorithms but configures them with insufficient key lengths, weak initialization vectors, or outdated operational modes (such as 1024-bit RSA keys or 56-bit DES keys). This makes the encryption computationally vulnerable to brute-force decoding or factorisation attacks by modern computing standards.",
+        "mitigation_name": "OWASP ASVS V6.2.2: Sufficient Key Lengths",
+        "mitigation_description": "Enforce minimum standard key lengths across all cryptographic tools. RSA keys must be at least 2048 bits (3072 bits preferred), ECC keys must be at least 256 bits, and symmetric keys (AES) must be at least 128 bits (256 bits preferred).",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x14-V6-Cryptography.md"
+    },
+    "CWE-330": {
+        "name": "Use of Insufficiently Random Values",
+        "owasp_category": "A02:2021-Cryptographic Failures",
+        "mitre_technique": "T1111",
+        "problem_explanation": "The application relies on predictable pseudo-random number generators (PRNGs), such as standard programming language Math.random() utilities, to generate sensitive security tokens like session IDs, password reset tokens, or cryptographic salts. An attacker can predict future outputs after analyzing a small sample sequence, leading to session hijacking or credential bypasses.",
+        "mitigation_name": "OWASP ASVS V6.3.1: Cryptographically Secure Randomness",
+        "mitigation_description": "Ensure that all security-sensitive random values, tokens, identifiers, and keys are generated using a Cryptographically Secure Pseudo-Random Number Generator (CSPRNG). Examples include java.security.SecureRandom in Java, the crypto module in Node.js, or secrets in Python.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x14-V6-Cryptography.md"
+    },
+    "CWE-312": {
+        "name": "Cleartext Storage of Sensitive Information",
+        "owasp_category": "A02:2021-Cryptographic Failures",
+        "mitre_technique": "T1552",
+        "problem_explanation": "The application stores high-value sensitive data (such as user passwords, credit card data, personal health records, or PII) in local storage, configuration files, databases, or logs without applying any encryption or hashing. Anyone who gains local backend access or read privileges over the datastore can instantly compromise all user profiles.",
+        "mitigation_name": "OWASP ASVS V6.2.5: Secure Storage of Credentials and PII",
+        "mitigation_description": "Never store raw data or plain text passwords. Protect passwords using a strong, resource-intensive adaptive hashing algorithm equipped with an automatic salt value (such as Argon2id or bcrypt). Encrypt personal identifiable information (PII) at rest using authenticated symmetric encryption (AES-GCM).",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x14-V6-Cryptography.md"
+    },
+    "CWE-757": {
+        "name": "Selection of Less-Secure Algorithm During Negotiation (Downgrade Attack)",
+        "owasp_category": "A02:2021-Cryptographic Failures",
+        "mitre_technique": "T1573",
+        "problem_explanation": "During the initial handshake protocol between a client and server (such as TLS negotiation), the system is configured to permit legacy configurations or weak cipher suites for backward compatibility. An attacker in a Man-in-the-Middle (MitM) positioning can manipulate the network packets to trick both sides into falling back to a weak protocol level (like TLS 1.0 or SSLv3), where traffic can then be broken or intercepted.",
+        "mitigation_name": "OWASP ASVS V9.1.1: Secure TLS Configuration",
+        "mitigation_description": "Disable support for legacy TLS protocol versions (remove TLS 1.0 and TLS 1.1 entirely) and explicitly enforce TLS 1.2 or TLS 1.3. Configure server-side cipher lists to drop support for weak options such as anonymous DH ciphers, export ciphers, and CBC-mode ciphers.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x17-V9-Communications.md"
+    },
+    "CWE-798": {
+        "name": "Use of Hard-coded Credentials",
+        "owasp_category": "A02:2021-Cryptographic Failures",
+        "mitre_technique": "T1078",
+        "problem_explanation": "The source code contains hardcoded inbound passwords, API keys, encryption secrets, or tokens. Anyone with access to the source code, compiled binaries, or version control history can extract these credentials and gain unauthorized administrative access to connected databases, cloud resources, or external APIs.",
+        "mitigation_name": "OWASP ASVS V2.7.1: Secure Credential Storage",
+        "mitigation_description": "Verify that credentials, API keys, and passwords are not hardcoded in the source code or committed to version control repositories. Inject secrets dynamically at runtime using environment variables or dedicated secure vault services.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x11-V2-Authentication.md"
+    }
+}

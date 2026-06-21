@@ -6,12 +6,15 @@ class CodeReviewer:
         self.model_name = model_name
         self.kb = SecurityKnowledgeBase()
 
-    def generate_secure_fix(self, file_path, cwe_id, line_number, vulnerable_code):
+    # Added the new parameters to the method signature
+    def generate_secure_fix(self, file_path, cwe_id, line_number, vulnerable_code, severity="UNKNOWN", likelihood="UNKNOWN", impact="UNKNOWN", references=None):
         owasp_context = self.kb.get_context_for_vulnerability(cwe_id)
         
         if not owasp_context:
-            print(f"Proceeding with generic LLM review (No local KB context found for {cwe_id}).")
             owasp_context = "No specific company security standard defined for this vulnerability yet. Use general secure coding best practices."
+
+        # Format references for the prompt
+        ref_string = "\n".join([f"- {ref}" for ref in references]) if references else "None provided."
 
         prompt = f"""You are an elite automated secure code reviewer. Your task is to rewrite vulnerable code snippets according to strict industry standards.
 
@@ -19,6 +22,13 @@ class CodeReviewer:
 File: {file_path}
 Line: {line_number}
 Detected Flaw: {cwe_id}
+
+[THREAT INTELLIGENCE]
+Severity: {severity}
+Likelihood: {likelihood}
+Impact: {impact}
+
+Contextual Note: Adjust your rigor based on these metrics. If Impact or Severity is HIGH, you must ensure the fix is absolutely airtight, leaving zero margin for edge-case exploits.
 
 [MANDATORY SECURITY RULES FROM KNOWLEDGE BASE]
 {owasp_context}
@@ -33,6 +43,7 @@ Detected Flaw: {cwe_id}
 2. Provide a brief, direct explanation of the flaw (1-2 sentences).
 3. Provide the completely rewritten, secure version of the code. 
 4. Ensure your fix strictly complies with the instructions in the Remediation Standard. Do not introduce any other external dependencies unless explicitly instructed.
+5. If helpful, briefly mention how the fix mitigates the specific 'Likelihood' or 'Impact' listed in the Threat Intelligence section.
 
 Respond in clean Markdown format with a section for 'Analysis' and a section for 'Secure Fix' containing the code block."""
 
@@ -53,13 +64,11 @@ Respond in clean Markdown format with a section for 'Analysis' and a section for
             return f"Error communicating with local Ollama server: {str(e)}"
 
 # ==========================================
-# EXECUTION BLOCK (So the file actually runs)
+# EXECUTION BLOCK
 # ==========================================
 if __name__ == "__main__":
-    # Initialize the reviewer
     reviewer = CodeReviewer(model_name="qwen2.5:3b")
     
-    # Simulate a finding sent from your Semgrep parser
     target_file = "samples/Test.java"
     detected_cwe = "CWE-89"
     target_line = 14
@@ -67,12 +76,16 @@ if __name__ == "__main__":
     
     print("Starting simulated Code Review...\n")
     
-    # Run the automated review
+    # Simulating a high-threat finding
     ai_review = reviewer.generate_secure_fix(
         file_path=target_file,
         cwe_id=detected_cwe,
         line_number=target_line,
-        vulnerable_code=broken_java_code
+        vulnerable_code=broken_java_code,
+        severity="ERROR",
+        likelihood="HIGH",
+        impact="HIGH",
+        references=["https://owasp.org/Top10/A03_2021-Injection"]
     )
     
     print("\n================ AI REVIEW OUTPUT ================")

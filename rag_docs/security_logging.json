@@ -1,0 +1,38 @@
+{
+    "CWE-117": {
+        "name": "Improper Output Neutralization for Logs (Log Injection)",
+        "owasp_category": "A09:2025-Security Logging and Alerting Failures",
+        "mitre_technique": "T1562",
+        "problem_explanation": "The application writes untrusted user input directly to log files without sanitization. An attacker can inject carriage returns and line feeds (CRLF) to forge fake log entries, covering their tracks. If the logs are viewed in a web-based dashboard, they could also inject Cross-Site Scripting (XSS) payloads that execute in the administrator's browser.",
+        "mitigation_name": "OWASP ASVS V7.3.2: Log Sanitization",
+        "mitigation_description": "Use a structured logging framework (like JSON logging) rather than string concatenation to ensure data is treated strictly as a value, not a log format instruction. If using plain text logs, strongly encode or strip all newline characters and HTML tags from user input before logging.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x15-V7-Error-Logging.md"
+    },
+    "CWE-532": {
+        "name": "Insertion of Sensitive Information into Log File",
+        "owasp_category": "A09:2025-Security Logging and Alerting Failures",
+        "mitre_technique": "T1552",
+        "problem_explanation": "During debugging or error handling, the developer logs full HTTP request objects, raw database query models, or complete exception stack traces. This accidentally writes plaintext passwords, API keys, session tokens, or Personal Identifiable Information (PII) into the log files, exposing them to anyone with read access to the monitoring systems.",
+        "mitigation_name": "OWASP ASVS V7.1.2: Log Data Redaction",
+        "mitigation_description": "Never log authentication credentials, session identifiers, or sensitive PII. Implement a centralized log redaction or masking utility within your logging framework to automatically scrub known sensitive fields (like 'password' or 'Authorization' headers) before writing to the log stream.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x15-V7-Error-Logging.md"
+    },
+    "CWE-778": {
+        "name": "Insufficient Logging of Critical Events",
+        "owasp_category": "A09:2025-Security Logging and Alerting Failures",
+        "mitre_technique": "T1078",
+        "problem_explanation": "The source code lacks logging statements for high-value security events. While the application might log generic errors, it fails to log successful/failed logins, password changes, privilege escalations, or access control failures. This blinds incident responders and prevents alerting systems from detecting brute-force attacks or lateral movement.",
+        "mitigation_name": "OWASP ASVS V7.1.1: Comprehensive Security Logging",
+        "mitigation_description": "Ensure that the application logic explicitly generates an audit log for all authentication processes, access control decisions (especially failures), input validation failures, and administrative state changes. Include contextual data such as the user ID, timestamp, and source IP.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x15-V7-Error-Logging.md"
+    },
+    "CWE-390": {
+        "name": "Detection of Error Condition Without Action (Swallowed Exceptions)",
+        "owasp_category": "A09:2025-Security Logging and Alerting Failures",
+        "mitre_technique": "T1562",
+        "problem_explanation": "The application code wraps critical operations (like a failed database connection, a blocked file upload, or a failed JWT validation) in a try-catch block, but leaves the catch block entirely empty or only prints to a local console. The error is effectively 'swallowed,' causing the system to fail silently without triggering any downstream monitoring alerts.",
+        "mitigation_name": "OWASP ASVS V7.4.2: Exception Handling and Logging",
+        "mitigation_description": "Never use empty catch blocks. Ensure that every caught security exception or critical operational failure is properly handled and explicitly forwarded to the centralized logging framework with appropriate severity levels (e.g., WARN or ERROR).",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x15-V7-Error-Logging.md"
+    }
+}

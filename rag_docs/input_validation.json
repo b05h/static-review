@@ -1,0 +1,74 @@
+{
+    "CWE-434": {
+        "name": "Unrestricted Upload of File with Dangerous Type",
+        "owasp_category": "A04:2021-Insecure Design",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application allows users to upload files but fails to strictly validate the file's type, extension, or contents. An attacker can bypass superficial checks to upload malicious executable scripts (like a PHP web shell), which the server may then blindly execute, leading to complete system compromise.",
+        "mitigation_name": "OWASP ASVS V12.2.1: Secure File Upload",
+        "mitigation_description": "Validate uploaded files against a strict allow-list of accepted file extensions and MIME types. Rename files upon upload using generated UUIDs to prevent directory traversal and execution. Store uploaded files outside of the web root or in an isolated cloud bucket.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x20-V12-Files-Resources.md"
+    },
+    "CWE-611": {
+        "name": "Improper Restriction of XML External Entity Reference (XXE)",
+        "owasp_category": "A05:2021-Security Misconfiguration",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application parses XML input using an insecurely configured XML parser that evaluates external entity references. An attacker can craft a malicious XML payload containing URIs that force the parser to read internal system files (like /etc/passwd) or execute internal network requests.",
+        "mitigation_name": "OWASP ASVS V5.5.2: Safe XML Parsing",
+        "mitigation_description": "Disable the resolution of XML External Entities (XXE) and Document Type Definitions (DTDs) in all XML parsers. Alternatively, migrate to simpler, less complex data formats like JSON where entity resolution is not a feature.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md"
+    },
+    "CWE-94": {
+        "name": "Improper Control of Generation of Code (Code Injection)",
+        "owasp_category": "A03:2021-Injection",
+        "mitre_technique": "T1059",
+        "problem_explanation": "The software receives input from an upstream component, but it does not sufficiently sanitize the input before incorporating it into a dynamic code evaluation context (like eval(), setTimeout(), or templating engines). This allows attackers to inject and execute native programming language code.",
+        "mitigation_name": "OWASP ASVS V5.3.8: Avoid Dynamic Execution",
+        "mitigation_description": "Never pass untrusted user input directly into dynamic code execution sinks (such as eval() or Function() in JavaScript, or reflection APIs in Java). Refactor code logic to rely on safe data structures and predefined state mappings instead of executing data as code.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md"
+    },
+    "CWE-113": {
+        "name": "Improper Neutralization of CRLF Sequences in HTTP Headers (HTTP Response Splitting)",
+        "owasp_category": "A03:2021-Injection",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application includes user input in an HTTP response header (such as a redirect URL or cookie value) without neutralizing Carriage Return and Line Feed (CRLF) characters. An attacker can inject these characters to split the HTTP response, allowing them to inject rogue headers, poison caches, or perform Cross-Site Scripting.",
+        "mitigation_name": "OWASP ASVS V5.1.4: Header Validation",
+        "mitigation_description": "Strictly validate and sanitize any user input before incorporating it into an HTTP response header. Ensure that all newline characters (\\r and \\n) are stripped or properly encoded to prevent header injection.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md"
+    },
+    "CWE-89": {
+        "name": "SQL Injection (SQLi)",
+        "owasp_category": "A03:2021-Injection",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application directly concatenates untrusted user input into a database query string instead of separating data from code execution. This allows an attacker to inject custom SQL commands, breaking the query's structural intent to view unauthorized records, modify database contents, or execute administrative commands.",
+        "mitigation_name": "OWASP ASVS V5.3.3: Parameterized Queries",
+        "mitigation_description": "Use parameterized queries (also known as prepared statements) for all database interactions to ensure user input is treated strictly as data, never as executable code. Never use string concatenation to build SQL queries.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md"
+    },
+    "CWE-79": {
+        "name": "Cross-Site Scripting (XSS)",
+        "owasp_category": "A03:2021-Injection",
+        "mitre_technique": "T1059.007",
+        "problem_explanation": "The web application receives untrusted user input and includes it in a web page response without proper validation or encoding. This allows an attacker to inject malicious JavaScript into a browser session, giving them the ability to hijack user sessions, steal cookies, deface websites, or redirect users to malicious landing pages.",
+        "mitigation_name": "OWASP ASVS V5.3.1 & V5.2.1: Contextual Encoding & CSP",
+        "mitigation_description": "Apply contextual output encoding (HTML, JavaScript, Attribute, or URL encoding) to all user-supplied data before rendering it in the browser. Additionally, implement a strict Content Security Policy (CSP) header to limit script execution capabilities.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md"
+    },
+    "CWE-918": {
+        "name": "Server-Side Request Forgery (SSRF)",
+        "owasp_category": "A10:2021-Server-Side Request Forgery",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The web application fetches an external resource from a URL provided directly by the user, but fails to validate that destination URL. An attacker can manipulate the URL to force the back-end application server to send unauthorized requests to internal cloud metadata services (like AWS IMDS), internal microservices, or local loopback addresses (127.0.0.1) that are normally hidden behind a firewall.",
+        "mitigation_name": "OWASP ASVS V5.2.8: SSRF Prevention via Allow-listing",
+        "mitigation_description": "Ensure that all untrusted destination URLs are validated against a strict, predefined allow-list before the server initiates a request. Block requests directed at private IP ranges (RFC 1918), local addresses, and cloud metadata endpoints (e.g., 169.254.169.254).",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md"
+    },
+    "CWE-78": {
+        "name": "OS Command Injection",
+        "owasp_category": "A03:2021-Injection",
+        "mitre_technique": "T1059.004",
+        "problem_explanation": "The application constructs an OS-level command using unsanitized user input. This allows an attacker to append or inject arbitrary system commands that are executed with the privileges of the vulnerable application, potentially compromising the entire host operating system.",
+        "mitigation_name": "OWASP ASVS V5.3.8: Command Injection Prevention",
+        "mitigation_description": "Avoid calling OS commands directly whenever possible. If system calls are required, use parameterized APIs where the command and its arguments are passed separately to prevent shell execution. If the shell must be used, implement strict allow-listing for all input data.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md"
+    }
+}

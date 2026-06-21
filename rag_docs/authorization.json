@@ -1,0 +1,65 @@
+{
+    "CWE-639": {
+        "name": "Insecure Direct Object Reference (IDOR) / Broken Object Level Authorization (BOLA)",
+        "owasp_category": "A01:2021-Broken Access Control",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application takes user input (such as a database ID, account number, or filename) to look up an object but fails to verify if the currently authenticated user is actually the owner of that object. This allows an attacker to manipulate the identifier to access, modify, or delete other users' private data.",
+        "mitigation_name": "OWASP ASVS V4.1.3: Access Control Enforcement",
+        "mitigation_description": "Verify that all access to database records, files, or other resources is explicitly checked against the authenticated user's permissions or ownership before granting access. Do not rely solely on identifiers provided by the client.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x12-V4-Access-Control.md"
+    },
+    "CWE-862": {
+        "name": "Missing Function Level Access Control",
+        "owasp_category": "A01:2021-Broken Access Control",
+        "mitre_technique": "T1190",
+        "problem_explanation": "Administrative or sensitive functions exist in the application, but the developer failed to implement the code that checks if the user has the required role (e.g., 'Admin') before executing the logic. This allows standard users or unauthenticated attackers to force-browse to sensitive endpoints and execute unauthorized actions.",
+        "mitigation_name": "OWASP ASVS V4.1.2: Function Level Access Control",
+        "mitigation_description": "Enforce role-based access control (RBAC) or attribute-based access control (ABAC) explicitly on every single route, controller, or endpoint. Ensure all administrative interfaces require elevated privilege verification before executing any logic.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x12-V4-Access-Control.md"
+    },
+    "CWE-915": {
+        "name": "Mass Assignment / Auto-Binding Vulnerabilities",
+        "owasp_category": "A08:2021-Software and Data Integrity Failures",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application automatically binds incoming HTTP request data (such as JSON payloads) directly into backend database objects or models. An attacker can inject unauthorized fields (like 'is_admin': true or 'role': 'superuser') into the request, escalating their privileges or altering protected object attributes.",
+        "mitigation_name": "OWASP ASVS V5.1.4: Strict Parameter Binding",
+        "mitigation_description": "Use strict allow-lists for object properties. Implement Data Transfer Objects (DTOs) or strong parameters to map incoming request bodies strictly to the fields that the user is explicitly authorized to modify, preventing the auto-binding of unintended properties.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md"
+    },
+    "CWE-352": {
+        "name": "Cross-Site Request Forgery (CSRF)",
+        "owasp_category": "A01:2021-Broken Access Control",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application performs state-changing operations based solely on ambient credentials like session cookies. This allows an attacker to host a malicious page that tricks a victim's browser into submitting an unauthorized request (such as transferring funds or changing an email) to a vulnerable site where the victim is currently authenticated.",
+        "mitigation_name": "OWASP ASVS V4.2.2: Anti-CSRF Tokens",
+        "mitigation_description": "Implement anti-CSRF measures such as requiring unpredictable, unique tokens for all state-changing requests (POST, PUT, DELETE). Alternatively, enforce the SameSite=Lax or SameSite=Strict attribute on all session cookies to prevent the browser from sending them during cross-origin requests.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x12-V4-Access-Control.md"
+    },
+    "CWE-276": {
+        "name": "Incorrect Default Permissions",
+        "owasp_category": "A05:2021-Security Misconfiguration",
+        "mitre_technique": "T1222",
+        "problem_explanation": "When a new user, object, or file is created by the application, it is assigned overly permissive access rights by default. This causes new entities to be publicly readable or modifiable, exposing sensitive data to unauthorized parties until permissions are manually restricted.",
+        "mitigation_name": "OWASP ASVS V4.1.1: Deny by Default",
+        "mitigation_description": "Implement a 'deny by default' posture. Ensure that any newly created user, file, or resource starts with the absolute minimum privileges necessary, and that broader access rights must be explicitly granted rather than revoked later.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x12-V4-Access-Control.md"
+    },
+    "CWE-284": {
+        "name": "Improper Access Control",
+        "owasp_category": "A01:2021-Broken Access Control",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application fails to properly enforce authorization boundaries or permission checks. This allows an attacker to bypass intended security policies, escalate their privileges, or access, modify, and delete resources or data belonging to other users.",
+        "mitigation_name": "OWASP ASVS V4.1.1: Access Control Enforcement",
+        "mitigation_description": "Implement a centralized access control mechanism that enforces the principle of least privilege and maintains a deny-by-default posture. Explicitly validate authorization on every single request that accesses sensitive data or restricted functionality.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x12-V4-Access-Control.md"
+    },
+    "CWE-22": {
+        "name": "Path Traversal / Directory Traversal",
+        "owasp_category": "A01:2021-Broken Access Control",
+        "mitre_technique": "T1083",
+        "problem_explanation": "The application accepts user input representing a file path or filename but fails to sanitize it against path traversal sequences like '../'. This allows an attacker to break out of the intended directory web root and view, modify, or execute arbitrary files on the host server's operating system (such as /etc/passwd).",
+        "mitigation_name": "OWASP ASVS V12.3.1: File Path Restriction",
+        "mitigation_description": "Verify that user-submitted filename metadata is not used directly with system file/API functions. Use a hardcoded allow-list of permitted files, map inputs to safe identifiers (like UUIDs), or strictly sanitize inputs using path resolution libraries to ensure they stay within the designated safe directory.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x20-V12-Files-Resources.md"
+    }
+}

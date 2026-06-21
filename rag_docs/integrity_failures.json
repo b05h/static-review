@@ -1,0 +1,38 @@
+{
+    "CWE-502": {
+        "name": "Deserialization of Untrusted Data",
+        "owasp_category": "A08:2025-Software and Data Integrity Failures",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application takes serialized data from an untrusted source and reconstructs it into an object in memory without prior validation. Attackers can manipulate the serialized byte stream to instantiate dangerous classes or alter logic flow, often resulting in Remote Code Execution (RCE) during the deserialization process.",
+        "mitigation_name": "OWASP ASVS V5.5.3: Safe Deserialization",
+        "mitigation_description": "Avoid deserializing data from untrusted sources. If absolutely necessary, use safe, language-agnostic data formats like JSON instead of native binary serialization. Implement strict cryptographic signatures (like HMAC) to verify the integrity of serialized data before parsing.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md"
+    },
+    "CWE-345": {
+        "name": "Insufficient Verification of Data Authenticity",
+        "owasp_category": "A08:2025-Software and Data Integrity Failures",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application accepts data from a client or a third-party service (such as an API webhook, a hidden form field, or a state parameter) without cryptographically verifying its authenticity. This allows an attacker to tamper with the data in transit, spoofing events like successful payments or administrative actions.",
+        "mitigation_name": "OWASP ASVS V5.1.5: Data Authenticity Verification",
+        "mitigation_description": "Require and validate a cryptographic message authentication code (HMAC) or a digital signature for all state-critical data that originates from, or passes through, an untrusted client or external network.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md"
+    },
+    "CWE-347": {
+        "name": "Improper Verification of Cryptographic Signature",
+        "owasp_category": "A08:2025-Software and Data Integrity Failures",
+        "mitre_technique": "T1552",
+        "problem_explanation": "The source code decodes a signed token (such as a JSON Web Token (JWT) or SAML assertion) but fails to actually execute or enforce the signature validation step before trusting the payload. Attackers exploit this by forging tokens (e.g., using the 'alg: none' vulnerability in JWTs) to escalate privileges or assume other identities.",
+        "mitigation_name": "OWASP ASVS V3.5.3: Strict Signature Enforcement",
+        "mitigation_description": "Enforce strict signature verification using a hardcoded, robust algorithm. Always verify the signature mathematically against a securely stored backend secret key or public key certificate *before* parsing or trusting any claims inside the token.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x11-V3-Session-management.md"
+    },
+    "CWE-426": {
+        "name": "Untrusted Search Path",
+        "owasp_category": "A08:2025-Software and Data Integrity Failures",
+        "mitre_technique": "T1574",
+        "problem_explanation": "The application code executes an external command or loads a system library but relies on relative paths or the host system's PATH environment variable to find the executable. An attacker who has local access can place a malicious executable with the same name in a directory that is searched earlier, successfully hijacking the execution flow.",
+        "mitigation_name": "OWASP ASVS V5.3.8: Absolute Path Enforcement",
+        "mitigation_description": "Always use absolute, hardcoded paths when invoking external executables, scripts, or dynamically linked libraries. Never rely on the system PATH variable or relative directory structures to resolve code execution dependencies.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md"
+    }
+}

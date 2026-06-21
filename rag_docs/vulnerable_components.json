@@ -1,0 +1,38 @@
+{
+    "CWE-937": {
+        "name": "Using Components with Known Vulnerabilities",
+        "owasp_category": "A03:2025-Software Supply Chain Failures",
+        "mitre_technique": "T1190",
+        "problem_explanation": "The application's dependency manifests specify third-party library versions that contain publicly disclosed security flaws (CVEs). Attackers can scan for these known version fingerprints and deploy pre-built exploit chains (such as Log4Shell or Struts vulnerabilities) to compromise the application without needing to discover new bugs.",
+        "mitigation_name": "OWASP ASVS V14.2.5: Dependency Scanning",
+        "mitigation_description": "Implement Software Composition Analysis (SCA) tools in the CI/CD pipeline to continuously monitor, alert, and block builds containing dependencies with known high-severity vulnerabilities. Enforce a patch management policy to regularly update libraries.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x22-V14-Config.md"
+    },
+    "CWE-829": {
+        "name": "Inclusion of Functionality from Untrusted Control Sphere",
+        "owasp_category": "A03:2025-Software Supply Chain Failures",
+        "mitre_technique": "T1195",
+        "problem_explanation": "The application's source code includes third-party JavaScript libraries (like analytics, ad-trackers, or UI frameworks) directly from an external Content Delivery Network (CDN) without integrity verification. If the CDN is breached, attackers can modify the hosted script to inject malware (like Magecart skimmers) directly into the user's browser.",
+        "mitigation_name": "OWASP ASVS V14.4.6: Subresource Integrity (SRI)",
+        "mitigation_description": "Always include a cryptographic hash in the `integrity` attribute of `<script>` and `<link>` tags when loading external resources. This ensures the browser will reject the script entirely if its contents have been altered by a compromised third party.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x22-V14-Config.md"
+    },
+    "CWE-1357": {
+        "name": "Reliance on Insufficiently Trustworthy Component (Dependency Confusion / Typosquatting)",
+        "owasp_category": "A03:2025-Software Supply Chain Failures",
+        "mitre_technique": "T1195.001",
+        "problem_explanation": "The build environment relies on package managers that automatically pull dependencies from public repositories before checking internal, private registries, leading to Dependency Confusion. Alternatively, developers may accidentally include malicious packages with names highly similar to legitimate ones (Typosquatting).",
+        "mitigation_name": "OWASP ASVS V14.2.3: Secure Package Management",
+        "mitigation_description": "Configure package managers to explicitly prioritize private, internal registries over public ones. Enforce strict namespace scopes (e.g., `@mycompany/package`) and maintain an internal, vetted artifact repository instead of pulling directly from public internet registries during production builds.",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x22-V14-Config.md"
+    },
+    "CWE-494": {
+        "name": "Download of Code Without Integrity Check",
+        "owasp_category": "A03:2025-Software Supply Chain Failures",
+        "mitre_technique": "T1195",
+        "problem_explanation": "The application or build script dynamically downloads external plugins, binaries, or updates at runtime or build-time over an unverified channel or without checking cryptographic hashes. If the upstream repository or network is compromised, attackers can replace the legitimate code with a malicious payload.",
+        "mitigation_name": "OWASP ASVS V14.2.4: Code Integrity and Signatures",
+        "mitigation_description": "Enforce strict integrity checks for all downloaded artifacts. Verify cryptographic signatures or secure checksums (like SHA-256) before executing or linking third-party code, and ensure all downloads occur exclusively over encrypted channels (HTTPS).",
+        "url": "https://github.com/OWASP/ASVS/blob/v4.0.3/4.0/en/0x22-V14-Config.md"
+    }
+}
