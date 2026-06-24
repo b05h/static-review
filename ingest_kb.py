@@ -3,13 +3,19 @@ import chromadb
 import os
 import glob
 
-def initialize_knowledge_base():
+def initialize_knowledge_base(force_rebuild=False):
     # 1. Initialize local persistent Chroma DB client
     # This creates a folder on your local disk to store the vector data safely offline
     client = chromadb.PersistentClient(path="./chroma_db")
     
     # 2. Create or get the collection
     collection = client.get_or_create_collection(name="owasp_kb")
+    
+    # --- THE OPTIMIZATION CHECK ---
+    # If the database already has files in it, and we aren't forcing a rebuild, stop here!
+    if collection.count() > 0 and not force_rebuild:
+        # print(f"✅ Knowledge Base already loaded with {collection.count()} rules. Skipping ingestion.")
+        return collection
         
     documents = []
     metadatas = []
@@ -21,7 +27,7 @@ def initialize_knowledge_base():
     
     if not json_files:
         print(f"Error: No JSON files found in '{target_folder}/'. Please check your folder structure.")
-        return
+        return collection
 
     print(f"3. Found {len(json_files)} knowledge base files. Processing...\n")
     
@@ -31,7 +37,6 @@ def initialize_knowledge_base():
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 kb_data = json.load(f)
-
 
             # 4. Process each CWE entry for the database
             for cwe_id, content in kb_data.items():
@@ -58,17 +63,24 @@ def initialize_knowledge_base():
         except json.JSONDecodeError:
             print(f"   [WARNING] Skipping {file_path}: Invalid JSON format. Check for missing commas.")
 
+    if not documents:
+        print("No valid CWE entries found to ingest.")
+        return collection
+
     print(f"\n4. Ingesting {len(documents)} total vulnerabilities into Chroma DB...")
         
     # 5. Insert data into Chroma DB
-    # Chroma handles tokenizing and generating embeddings locally automatically
-    collection.add(
+    # Using 'upsert' instead of 'add' prevents ID collision crashes if force_rebuild=True is used
+    collection.upsert(
         documents=documents,
         metadatas=metadatas,
         ids=ids
     )
     
     print(f"Successfully initialized Chroma DB with {len(documents)} vulnerabilities.")
+    
+    return collection
 
 if __name__ == "__main__":
-    initialize_knowledge_base()
+    # If run directly from the terminal, force a rebuild for testing
+    initialize_knowledge_base(force_rebuild=True)

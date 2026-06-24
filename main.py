@@ -44,13 +44,25 @@ def parse_semgrep_json(file_path="findings.json"):
             cwe_match = re.search(r"(CWE-\d+)", cwes[0], re.IGNORECASE)
             if cwe_match:
                 cwe_id = cwe_match.group(1).upper()
-                
+
+                # NEW LOGIC: Check if we've already logged this CWE within 5 lines
+                is_duplicate = False
+                for signature in seen_signatures:
+                    seen_file, seen_line, seen_cwe = signature.split(":")
+                    if target_file == seen_file and cwe_id == seen_cwe:
+                        if abs(line_number - int(seen_line)) <= 5:
+                            is_duplicate = True
+                            break
+                            
+                if is_duplicate:
+                    continue
+                        
         finding_signature = f"{target_file}:{line_number}:{cwe_id}"
         if finding_signature in seen_signatures:
             continue
         seen_signatures.add(finding_signature)
                 
-        vulnerable_code = get_code_context(target_file, line_number, context_lines=3)
+        vulnerable_code = get_code_context(target_file, line_number, context_lines=10)
         
         # --- NEW: Advanced Threat Metadata Extraction ---
         severity = extra_data.get("severity", "UNKNOWN")
@@ -80,7 +92,7 @@ def run_pipeline():
         return
 
     print(f"Found {len(findings)} unique vulnerabilities. Initializing AI Code Reviewer...\n")
-    reviewer = CodeReviewer(model_name="qwen2.5:3b")
+    reviewer = CodeReviewer(model_name="qwen2.5:7b")
     
     for idx, finding in enumerate(findings, 1):
         print(f"--- Reviewing Finding {idx}/{len(findings)} ---")

@@ -1,0 +1,9 @@
+streamlit==1.58.0
+tree-sitter==0.25.2
+tree-sitter-java==0.23.5
+ollama==0.6.2
+pandas==2.2.1
+# Note: Semgrep is installed globally or via pip, adding it here for the environment
+semgrep==1.166.0
+# Add ChromaDB or any other vector DB libraries you used in ingest_kb.py
+chromadb==1.5.9

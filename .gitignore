@@ -1,0 +1,16 @@
+# Virtual Environments
+.venv/
+venv/
+env/
+__pycache__/
+
+# Pipeline Output Files
+findings.json
+gitleaks_findings.json
+
+# Local Databases & Executables
+chroma_db/
+gitleaks.exe
+
+# OS generated files
+.DS_Store
